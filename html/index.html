@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TP Infrastructure as Code</title>
+</head>
+<body>
+  <h1>Infrastructure déployée avec Terraform pour les Nuls</h1>
+  <p>Serveur Nginx exécuté dans Docker.</p>
+  <p>Déploiement géré par Infrastructure as Code.</p>
+  <p>On est le 12 Octobre 2026</p>
+  <p>Pour le moment ça va, ce n'est pas trop compliqué.</p>
+  <p>
+    Question 9.
+    La copie de l'image donne une copie du fichier à l'image Docker.
+    Une modification du fichier source ne modifie pas la copie.
+
+    Tandis qu'avec la méthode bind, le conteneur accède directement au fichier.
+    Une modification du fichier entraine la modification dans le docker.
+    Le fichier n'est pas passé à l'image mais est bine dans le conteneur pour l'exécution.
+  </p>
+  <p>
+    Question 10.
+    Le conteneur est connecté à ce réseau parce que cette connexion a été définie dans la configuration Terraform.
+    Cela lui permet de communiquer avec les autres conteneurs connectés au même réseau Docker.
+
+    Déclarer le réseau dans Terraform permet d'automatiser sa création et sa configuration.
+    Terraform peut ainsi gérer le réseau et les conteneurs associés à partir d'un même fichier de configuration,
+    tout en assurant la cohérence de l'infrastructure.
+    
+    Lors de la destruction du projet avec `terraform destroy`, Terraform supprime le réseau qu'il a créé,
+    à condition qu'aucune dépendance ou ressource externe ne l'empêche.
+    Cette suppression peut être vérifiée avec la commande `docker network ls` avant et après la destruction du projet.
+  </p>
+
+  <p>
+    Question 11.
+    L'IP 127.0.0.1 ne permet l'accès que depuis la machine et empêche l'accès direct à n'importe quelle autre machine du réseau.
+    Une écoute sur toutes les interfaces se fait via 0.0.0.0 et permet l'accès à n'importe quelle autre machine.
+  </p>
+
+  <p>
+    Question 12.
+    La commande terraform state list affiche les ressources gérées par Terraform dans l'état actuel du projet.
+    Dans mon cas, trois ressources apparaissent :
+    docker_container.web : le conteneur Nginx ;
+    docker_image.nginx : l'image Docker de Nginx ;
+    docker_network.app_network : le réseau Docker.c
+
+    La commande terraform state show docker_container.web affiche les détails de la ressource sélectionnée.
+    On y retrouve notamment son identifiant, son nom, son image, son adresse IP,
+    le réseau auquel elle est connectée, les montages de fichiers et la configuration des ports.
+    Elle permet donc d'inspecter précisément une ressource gérée par Terraform.
+
+    L'état Terraform doit être protégé car il contient des informations détaillées sur l'infrastructure,
+    telles que les identifiants des ressources, les adresses IP, la configuration réseau et,
+    selon les ressources utilisées, des données sensibles comme des mots de passe ou des clés d'accès.
+    Une personne non autorisée pourrait exploiter ces informations pour mieux comprendre l'infrastructure ou compromettre sa sécurité.
+
+    Il faut éviter de publier l'état Terraform dans un dépôt public,
+    car toute personne pourrait consulter les informations qu'il contient,
+    y compris d'éventuelles données confidentielles.
+    Cela pourrait faciliter des attaques contre l'infrastructure ou entraîner la divulgation de secrets.
+    Il est donc préférable de ne pas versionner le fichier d'état local dans un dépôt public et de protéger son stockage.
+  </p>
+
+  <p>
+    Question 15.
+    Git status permet de voir les fichiers modifiés ou absents entre le local et le distant.
+    Tandis que git diff donne le détail des différences au sein des fichiers modifiés.
+
+    L'historique des commits permet ensuite de retrouver l'auteur et la raison des modifications,
+    ce qui facilite la relecture du code et le travail en équipe.
+    Aussi, Git permet de revenir à une version précédente ou d'annuler une modification problématique,
+    ce qui sécurise le développement.
+  </p>
+
+</body>
+</html>
